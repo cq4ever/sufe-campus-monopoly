@@ -44,8 +44,9 @@ export function localCard(kind: "event" | "quiz"): Card {
       };
 }
 export async function requestCard(kind: "event" | "quiz"): Promise<Card> {
+  if (import.meta.env.VITE_DISABLE_AI === "true") return localCard(kind);
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 6500);
+  const timer = setTimeout(() => controller.abort(), 6000);
   try {
     const response = await fetch("/api/event", {
       method: "POST",
