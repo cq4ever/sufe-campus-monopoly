@@ -1,89 +1,112 @@
-# 上财校园大富翁
+# 上财人格测试
 
-移动优先、同屏轮流玩的校园棋盘小游戏。Vite + React + TypeScript、纯 CSS，游戏规则由纯函数 `useReducer` 驱动，localStorage 自动保存。无需 API Key 也可以完整游玩。
+手机网页娱乐小测试：15 道上财校园日常题、16 种人格、可分享的 3:4 结果卡。Vite + React + TypeScript，纯 CSS、自绘 SVG 雷达图。运行依赖仅 React、React DOM、html-to-image、qrcode。非官方校园项目，结果仅供娱乐。
 
 ## 本地运行
 
+使用 Node.js 20+：
+
 ```bash
-npm i
+npm ci
 npm run dev
 ```
 
-打开终端显示的地址。`npm run dev` 只运行静态前端，访问 `/api/event` 失败会自动使用本地题库。手机可以访问同一局域网内电脑的 IP 和 Vite 端口。
+打开 Vite 输出地址。答案与当前进度保存在当前浏览器、当前域名的 localStorage，刷新可继续；存档损坏会安全重置，存储不可用时仍可答题。重新测试会清空本次答案。返回上题后修改答案，会清除后续答案，以新的选择继续。
 
-完整测试前端与 Serverless Function：
+Vite 开发服务器只运行前端，不提供 `/api/result`；接口不存在时自动展示经典版。纯本地无请求运行：
+
+```bash
+VITE_DISABLE_AI=true npm run dev
+```
+
+同时运行前端与 Vercel Serverless Function：
 
 ```bash
 cp .env.example .env.local
-# 填入服务端变量（可选，不填使用题库）
+# 只在本地文件中填写服务端变量，切勿提交密钥
 npx vercel dev
 ```
 
-Vercel CLI 可能需要先登录并关联项目。Vite 页面与 API 均通过 `vercel dev` 输出的地址访问。
+Vercel CLI 需要登录并关联项目，使用其输出的地址访问。
 
 ```bash
-npm run build
 npm test
+npm run build
+npm run dev
 ```
 
 ## 环境变量
 
-只在 `.env.local` 或 Vercel 项目设置中配置：
+`.env.local` 已被忽略；也可在 Vercel Settings → Environment Variables 设置。修改 `VITE_` 变量后需要重新构建。
 
-| 变量           | 说明                                                                                     |
-| -------------- | ---------------------------------------------------------------------------------------- |
-| `LLM_API_KEY`  | OpenAI 兼容服务的密钥；不配置即返回本地题库                                              |
-| `LLM_BASE_URL` | 默认 `https://api.openai.com/v1`，填写包含 `/v1` 的 API 根地址，不含 `/chat/completions` |
-| `LLM_MODEL`    | 默认 `gpt-4o-mini`，按供应商填写                                                         |
+| 变量              | 用途与默认值                                                                                                          |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `LLM_API_KEY`     | **仅服务端**。OpenAI 兼容服务密钥；不配置时 API 返回 `{fallback:true}`                                                |
+| `LLM_BASE_URL`    | **仅服务端**，默认 `https://api.deepseek.com`；填 API 根地址，不带 `/chat/completions`，其他服务如有 `/v1` 需自行包含 |
+| `LLM_MODEL`       | **仅服务端**，默认 `deepseek-chat`                                                                                    |
+| `VITE_API_BASE`   | 公开配置。默认空字符串，即同源 `/api/result`；前后端分离时填 API 域名，可带路径前缀                                   |
+| `VITE_SITE_URL`   | 公开配置。二维码的完整网站地址；缺省使用当前页面 URL。服务端也读取其 origin 作为 CORS 允许来源                        |
+| `VITE_DISABLE_AI` | 公开配置。仅字符串 `true` 完全跳过 AI 请求；默认启用 AI 并允许失败兜底                                                |
 
-**绝不使用 `VITE_` 保存密钥，也不要提交 `.env.local`。** 前端仅请求同源 `/api/event`，没有任何密钥或服务端配置。服务端 6 秒超时，前端 6 秒超时；错误、非 JSON、结构不符、数值越界均切换至本地内容。卡片标注「AI 生成」或「题库」。无外部字体、图片或 UI 库依赖。
+**绝不能用任何 `VITE_` 变量存储 Key。** `LLM_*` 只由 `api/result.ts` 读取，不进入浏览器代码。本站不用外部字体、图片或分析统计脚本。测试不收集姓名、学号；启用 AI 时会向配置的服务发送人格代号、维度分数和 15 个选项文字；经典版不发送答题请求。二维码生成和图片导出都在本地完成。
 
-## 部署到 Vercel
+## GitHub Pages
 
-1. 将此仓库推送到 GitHub，Vercel 中选择 Add New Project 并导入。
-2. Framework Preset 选择 Vite。Build Command 为 `npm run build`，Output Directory 为 `dist`。
-3. 在 Settings → Environment Variables 配置上述三个变量（可不配置）。
-4. Deploy。`api/event.ts` 会自动部署为 Node Serverless Function，无需独立后端。
-5. 修改环境变量后重新部署。访问域名确认页面可开局；未设置密钥时 API 返回题库卡片属于正常行为。
+地址：https://cq4ever.github.io/sufe-campus-monopoly/
 
-也可在本目录使用 `npx vercel` 预览部署，`npx vercel --prod` 正式部署。
+仓库 Settings → Pages → Source 选择 **GitHub Actions**。保留的 `.github/workflows/deploy-pages.yml` 在推送 `main` 后依次运行 `npm ci`、测试、构建和 Pages 部署；也支持手动运行。功能分支 PR 不会直接部署线上。
 
-## GitHub Pages 部署
-
-访问地址：https://cq4ever.github.io/sufe-campus-monopoly/
-
-在仓库 **Settings → Pages** 中将 **Source** 设为 **GitHub Actions**。推送到 `main` 后，`deploy-pages.yml` 会自动运行测试、构建并部署；也可以在 Actions 页面手动运行该工作流。
-
-GitHub Pages 仅托管静态前端，不提供 `/api/event`。工作流使用 `GITHUB_PAGES=true` 设置资源路径为 `/sufe-campus-monopoly/`，并使用 `VITE_DISABLE_AI=true` 跳过 AI 请求、直接随机抽取预置题库。本地可用相同配置验证构建：
+构建使用 `GITHUB_PAGES=true`（资源 base 为 `/sufe-campus-monopoly/`）和 `VITE_DISABLE_AI=true`（完全不请求 API，显示经典版）。Pages 只提供静态文件，无需密钥或后端。验证方式：
 
 ```bash
 GITHUB_PAGES=true VITE_DISABLE_AI=true npm run build
+GITHUB_PAGES=true npm exec vite preview -- --host 0.0.0.0
+# 打开 http://localhost:4173/sufe-campus-monopoly/
 ```
 
-不设置 `GITHUB_PAGES=true` 时资源路径保持 `/`；不设置 `VITE_DISABLE_AI=true` 时仍请求同源 API，前端超时为 6 秒。
+二维码未配置时使用当前地址，包含正确的 Pages 子路径。自定义 `VITE_SITE_URL` 时也要包含 `/sufe-campus-monopoly/`。
 
-## 规则说明
+## Vercel
 
-- 2–4 人，每人现金 ¥1500。每回合掷一颗六面骰，逐格移动；经过或停留起点只奖励一次 ¥200。
-- 无主地产可购买或跳过；停在他人地产付价格 20% 的租金，同色组 3 处全部集齐翻倍。
-- 校园事件范围 −¥200 至 +¥200。财经题答对 +¥150，答错 −¥50，答题后显示解析并确认结算。
-- 校医院下一个自己的回合休息一次；主体育馆休息；武东田径场 +¥100。
-- 不设抵押、出售和拍卖，现金小于 0 立即出局，地产回归无主；现金为 0 可继续。
-- 只剩一人、任何玩家现金达到 ¥5000，或完成 30 轮时结束。一轮是按座位顺序所有未出局玩家各完成一次回合（包括医院休息）。
-- 30 轮按现金 + 地产原价选出胜者，允许并列。排名先列存活者，再列出局者，各组内按资产排序。
-- 存档仅保存在当前浏览器与域名，刷新后继续；清除浏览器数据会删除存档。浏览器禁用存储时可玩，但无法保存；事件/题目未结算时刷新会重新抽卡，不重复结算。
+1. Import Git Repository，选择本仓库，Framework Preset 为 Vite。
+2. Build Command：`npm run build`；Output Directory：`dist`。
+3. 不设置 `GITHUB_PAGES`，资源 base 为 `/`；不设置 `VITE_DISABLE_AI=true`。
+4. 可选配置上述 `LLM_*`。设置 `VITE_SITE_URL=https://你的站点域名/`，供二维码和 CORS 使用；同源部署 `VITE_API_BASE` 留空。
+5. Deploy。`api/result.ts` 自动成为 `/api/result` Node Serverless Function；`vercel.json` 将函数最大时长设为 10 秒，代码中模型请求 8 秒超时。
 
-## 目录
+未配置 Key 或供应商不可用时仍可完成测试。跨域请求只允许 `https://cq4ever.github.io`、`VITE_SITE_URL` 的精确 origin，以及 Vercel 提供的本站预览/生产域名；不使用通配符。自定义域名应正确设置 `VITE_SITE_URL`。预检允许 POST 和 Content-Type；不计入限流。
 
-- `src/data/board.ts`：20 格棋盘及片区颜色
-- `src/data/fallbackEvents.ts`：32 条校园事件
-- `src/data/fallbackQuiz.ts`：32 道大一财经题
-- `src/game/engine.ts`：纯 reducer、动作类型、租金与资产计算
-- `src/game/storage.ts`：存档结构与状态一致性校验，损坏存档安全回退
-- `src/game/engine.test.ts`：骰子、移动、购地、租金、破产、医院、胜利和回合边界测试
-- `src/lib/cards.ts`：前后端共享结构校验及前端兜底请求
-- `api/event.ts`：服务端 AI 请求、校验和兜底
-- `tests/api.test.ts`：Serverless 输入、模型输出与超时验证
-- `src/main.tsx`、`src/style.css`：设置、棋盘、操作台、卡片与结算
+同一 IP 每 60 秒最多 5 次有效 POST，超限返回 429 和 `{fallback:true}`。使用内存 Map，冷启动或多实例之间不共享，因此只是 MVP 的简单限流，不是全局持久配额。
 
-本项目是非官方校园主题娱乐游戏，不涉及真实金钱或学校政策。
+## 计分与文案
+
+`src/quiz/score.ts` 是纯函数：选项依次 +2、+1、−1、−2，每题只影响一个维度。J/T（卷/躺）、N/K（社牛/社恐）、F/Y（干饭/养生）、P/S（计划/随缘），正分取前者，负分取后者；零分由本维度第一题所选选项的正负决定。
+
+J/N/F 满分为 8，P 满分为 6，雷达值为 `round((总分+满分)/(2×满分)×100)`。夜猫标记位于第 1、4、10、15 题，所选标记数除以 4 再乘 100。雷达绘图最低 5，文字仍显示真实 0–100 值。
+
+```text
+POST /api/result
+{code, scores: {J, N, F, P, night}, picks: [15 个选项文字]}
+```
+
+`scores.night` 是原始命中数 0–4，其他维度是原始总分；归一化雷达值不会作为总分提交。服务端核对选项与分数/类型一致，再调用模型，AI 只写文案，不能决定类型。服务端与客户端共用结构/长度校验，长度按 Unicode 字符计；服务端校验函数也从 `api/result.ts` 单独导出。
+
+结果页立即显示本地预设，AI 合法响应后更新为「AI 定制」。错误、非法 JSON/字段、超时、限流、`fallback` 均保留「经典版」。客户端 9 秒总超时，覆盖读取响应体；离开结果页取消请求并忽略旧响应。
+
+## 保存与分享
+
+结果卡包含名称、代号、可选副标题、5 项雷达、吐槽、3 个标签、分享语和网站二维码。没有真实统计前，同类比例位置隐藏，不展示任何数字。
+
+「保存图片」等待 `document.fonts.ready` 与二维码图像就绪，再由 html-to-image 导出 1200×1600 PNG。弹层提示「长按图片保存或分享」；微信浏览器仅提供长按，其他浏览器同时提供下载。导出失败可重试，也可截图。各手机浏览器的长按菜单由系统决定。
+
+## 修改题目与文案
+
+- `src/data/questions.ts`：15 道题、选项分值与夜猫标记
+- `src/data/types.ts`：恰好 16 种人格、名称、预设 roast/tags/share，兜底 subtitle 为空
+- `src/data/copy.ts`：集中管理界面与雷达标签文案
+- `src/data/ai.ts`：AI system prompt 的语气、地点白名单和内容限制
+- `src/quiz/`：计分和存档校验；`src/lib/`：文案校验、AI 客户端、总超时
+- `src/components/`：SVG 雷达、3:4 结果卡、二维码与图片弹层
+- `api/result.ts`：服务端调用、校验、CORS、限流
+
+Vitest 覆盖全 A/全 D、维度平局、夜猫、雷达范围、全部 16 类型可达且唯一、存档校验、AI 禁用/失败/超时/合法响应、JSON 字段长度、API 输入、限流与 CORS，以及雷达零值的可见绘图。
