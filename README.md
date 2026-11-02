@@ -36,7 +36,7 @@ npm test
 | `LLM_BASE_URL` | 默认 `https://api.openai.com/v1`，填写包含 `/v1` 的 API 根地址，不含 `/chat/completions` |
 | `LLM_MODEL`    | 默认 `gpt-4o-mini`，按供应商填写                                                         |
 
-**绝不使用 `VITE_` 保存密钥，也不要提交 `.env.local`。** 前端仅请求同源 `/api/event`，没有任何密钥或服务端配置。服务端 6 秒超时，前端 6.5 秒超时；错误、非 JSON、结构不符、数值越界均切换至本地内容。卡片标注「AI 生成」或「题库」。无外部字体、图片或 UI 库依赖。
+**绝不使用 `VITE_` 保存密钥，也不要提交 `.env.local`。** 前端仅请求同源 `/api/event`，没有任何密钥或服务端配置。服务端 6 秒超时，前端 6 秒超时；错误、非 JSON、结构不符、数值越界均切换至本地内容。卡片标注「AI 生成」或「题库」。无外部字体、图片或 UI 库依赖。
 
 ## 部署到 Vercel
 
@@ -47,6 +47,20 @@ npm test
 5. 修改环境变量后重新部署。访问域名确认页面可开局；未设置密钥时 API 返回题库卡片属于正常行为。
 
 也可在本目录使用 `npx vercel` 预览部署，`npx vercel --prod` 正式部署。
+
+## GitHub Pages 部署
+
+访问地址：https://cq4ever.github.io/sufe-campus-monopoly/
+
+在仓库 **Settings → Pages** 中将 **Source** 设为 **GitHub Actions**。推送到 `main` 后，`deploy-pages.yml` 会自动运行测试、构建并部署；也可以在 Actions 页面手动运行该工作流。
+
+GitHub Pages 仅托管静态前端，不提供 `/api/event`。工作流使用 `GITHUB_PAGES=true` 设置资源路径为 `/sufe-campus-monopoly/`，并使用 `VITE_DISABLE_AI=true` 跳过 AI 请求、直接随机抽取预置题库。本地可用相同配置验证构建：
+
+```bash
+GITHUB_PAGES=true VITE_DISABLE_AI=true npm run build
+```
+
+不设置 `GITHUB_PAGES=true` 时资源路径保持 `/`；不设置 `VITE_DISABLE_AI=true` 时仍请求同源 API，前端超时为 6 秒。
 
 ## 规则说明
 
