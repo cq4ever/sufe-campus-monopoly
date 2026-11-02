@@ -3,5 +3,5 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "functions": { "api/event.ts": { "maxDuration": 10 } }
+  "functions": { "api/result.ts": { "maxDuration": 10 } }
 }
