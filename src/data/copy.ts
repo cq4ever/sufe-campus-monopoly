@@ -4,7 +4,7 @@ export const copy = {
   eyebrow: "SUFE · CAMPUS PERSONALITY",
   homeKicker: "你的校园生活，自有一种风格。",
   homeLead:
-    "从早八到夜宵，从图书馆到五角场，\n那些日常小选择，藏着你的上财人格。",
+    "从早八到夜宵，从英贤到五角场，\n那些日常小选择，藏着你的上财人格。",
   start: "开始测试",
   homeMeta: ["15 道日常选择", "16 种上财人格", "约 2 分钟"],
   homeFootnote: "没有标准答案，选最像你的那个就好。",

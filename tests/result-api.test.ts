@@ -112,7 +112,7 @@ it("calls OpenAI compatible API with requested defaults and JSON format", async 
     temperature: 0.9,
     response_format: { type: "json_object" },
   });
-  expect(sent.messages[0].content).toContain("图书馆");
+  expect(sent.messages[0].content).toContain("英贤图书馆");
 });
 it.each(["missing-key", "bad-json", "invalid-copy", "http-error", "network"])(
   "falls back for %s",
