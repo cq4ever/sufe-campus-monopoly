@@ -3,6 +3,7 @@ import { copy } from "../data/copy";
 import { getPersonality, personalityTypes } from "../data/types";
 import type { QuizResult } from "../quiz/score";
 import type { ResultText } from "../lib/resultCopy";
+import { CodeLegend } from "./CodeLegend";
 import { Radar } from "./Radar";
 interface Props {
   result: QuizResult;
@@ -18,7 +19,7 @@ export const ResultCard = forwardRef<HTMLElement, Props>(function ResultCard(
   return (
     <article ref={ref} className="result-card" aria-label={copy.imageAlt}>
       <div className="card-topline">
-        <span>{copy.eyebrow}</span>
+        <span>{copy.resultHeader}</span>
         <span className="version-tag">
           {text.source === "ai" ? copy.ai : copy.classic}
         </span>
@@ -30,6 +31,7 @@ export const ResultCard = forwardRef<HTMLElement, Props>(function ResultCard(
           <span>{result.code}</span>
           {text.subtitle && <strong>{text.subtitle}</strong>}
         </div>
+        <CodeLegend code={result.code} />
       </div>
       <div className="card-chart">
         <p>{copy.radarTitle}</p>

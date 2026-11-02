@@ -7,6 +7,7 @@ import { questions } from "../data/questions";
 import { requestAiResult } from "../lib/aiClient";
 import type { ResultText } from "../lib/resultCopy";
 import type { QuizResult } from "../quiz/score";
+import { CodeLegend } from "./CodeLegend";
 import { ResultCard } from "./ResultCard";
 interface Props {
   answers: number[];
@@ -24,11 +25,9 @@ export function ResultScreen({ answers, result, onRestart }: Props) {
   const [qr, setQr] = useState("");
   const [qrAttempt, setQrAttempt] = useState(0);
   const [qrError, setQrError] = useState(false);
-  const [scale, setScale] = useState(0.5);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [image, setImage] = useState("");
-  const stage = useRef<HTMLDivElement>(null);
   const card = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const saveButton = useRef<HTMLButtonElement>(null);
@@ -75,15 +74,6 @@ export function ResultScreen({ answers, result, onRestart }: Props) {
     };
   }, [qrAttempt]);
   useEffect(() => {
-    if (!stage.current) return;
-    const element = stage.current;
-    const update = () => setScale(element.getBoundingClientRect().width / 600);
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
-  useEffect(() => {
     if (image) dialog.current?.showModal();
   }, [image]);
   async function save() {
@@ -120,11 +110,14 @@ export function ResultScreen({ answers, result, onRestart }: Props) {
         <span className="section-kicker">{copy.resultHeader}</span>
         <p>{copy.resultHint}</p>
       </div>
-      <div
-        className="card-stage"
-        ref={stage}
-        style={{ "--card-scale": scale } as React.CSSProperties}
-      >
+      <div className="page-code-legend">
+        <p>{copy.codeLegendTitle}</p>
+        <CodeLegend code={result.code} />
+      </div>
+      <div className="card-stage">
+        <ResultCard result={result} text={text} qr={qr} />
+      </div>
+      <div className="export-stage" aria-hidden="true">
         <ResultCard ref={card} result={result} text={text} qr={qr} />
       </div>
       <p className="ai-status" aria-live="polite">

@@ -101,15 +101,6 @@ a {
   font-size: 11px;
   letter-spacing: 2px;
 }
-.header-index {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-.header-index span {
-  color: #939d9f;
-  font-weight: 400;
-}
 .section-kicker {
   font-size: 11px;
   letter-spacing: 2.2px;
@@ -408,7 +399,6 @@ a {
   line-height: 1.5;
   letter-spacing: -0.5px;
   margin-top: 18px;
-  min-height: 87px;
   max-width: 470px;
 }
 .question-hint {
@@ -494,7 +484,6 @@ a {
 }
 .card-stage {
   position: relative;
-  aspect-ratio: 3/4;
   max-width: 600px;
   width: 100%;
   border-radius: 18px;
@@ -512,7 +501,6 @@ a {
   position: absolute;
   top: 0;
   left: 0;
-  transform: scale(var(--card-scale));
   transform-origin: top left;
   display: flex;
   flex-direction: column;
@@ -549,7 +537,7 @@ a {
   line-height: 1.32;
   letter-spacing: -1px;
   max-width: 520px;
-  min-height: 60px;
+  min-height: 50px;
   display: flex;
   align-items: center;
 }
@@ -577,8 +565,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 0 0 235px;
-  height: 235px;
+  flex: 0 0 215px;
+  height: 215px;
   margin: 13px 0 0;
 }
 .card-chart > p {
@@ -592,7 +580,7 @@ a {
 }
 .radar {
   width: 340px;
-  height: 235px;
+  height: 215px;
   overflow: visible;
 }
 .card-roast {
@@ -974,13 +962,12 @@ a {
   }
   .question-content h1 {
     font-size: 25px;
-    min-height: 76px;
     line-height: 1.5;
     margin-top: 17px;
   }
   .question-hint {
     font-size: 11px;
-    margin: 10px 0 24px;
+    margin: 8px 0 20px;
   }
   .option {
     padding: 15px 13px;
@@ -1057,4 +1044,207 @@ a {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+/* The page card uses native text sizes; the separate export canvas stays 3:4. */
+.code-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #52655e;
+}
+.code-legend li {
+  white-space: nowrap;
+}
+.page-code-legend {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.page-code-legend > p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.export-stage {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 600px;
+  height: 800px;
+  pointer-events: none;
+}
+.export-stage .card-topline,
+.export-stage .version-tag,
+.export-stage .card-chart > p,
+.export-stage .card-roast > span,
+.export-stage .card-tags span,
+.export-stage .card-share > span,
+.export-stage .card-share small,
+.export-stage .card-qr span,
+.export-stage .card-baseline {
+  font-size: 12px;
+}
+.export-stage .card-heading {
+  margin-top: 14px;
+}
+.export-stage .card-chart > p {
+  writing-mode: horizontal-tb;
+  position: static;
+  align-self: flex-start;
+}
+.export-stage .card-chart {
+  height: 230px;
+  flex-basis: 230px;
+  margin-top: 8px;
+}
+.export-stage .card-qr {
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.export-stage .card-qr span {
+  writing-mode: horizontal-tb;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.card-stage .result-card {
+  position: static;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  padding: 22px 20px;
+  border-radius: 14px;
+}
+.card-stage .card-topline {
+  font-size: 12px;
+  letter-spacing: 1px;
+  gap: 12px;
+}
+.card-stage .version-tag {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.card-stage .card-heading {
+  margin-top: 20px;
+}
+.card-stage .card-heading > p {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.card-stage .card-heading h1 {
+  font-size: 27px;
+  min-height: 0;
+  line-height: 1.4;
+  letter-spacing: 0;
+  display: block;
+}
+.card-stage .card-code {
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 10px;
+}
+.card-stage .card-code > span {
+  font-size: 20px;
+}
+.card-stage .card-code strong {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.card-stage .card-chart {
+  position: static;
+  flex: auto;
+  height: auto;
+  margin: 24px 0 12px;
+}
+.card-stage .card-chart > p {
+  position: static;
+  writing-mode: horizontal-tb;
+  font-size: 12px;
+  letter-spacing: 1px;
+  align-self: flex-start;
+  color: #52655e;
+}
+.card-stage .radar {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.card-stage .card-roast {
+  display: block;
+  min-height: 0;
+  padding-top: 16px;
+}
+.card-stage .card-roast > span {
+  display: inline-block;
+  writing-mode: horizontal-tb;
+  font-size: 12px;
+  padding: 4px 8px;
+  letter-spacing: 0;
+  margin-bottom: 8px;
+}
+.card-stage .card-roast p {
+  font-size: 15px;
+  line-height: 1.8;
+  padding: 0;
+}
+.card-stage .card-tags {
+  margin-top: 14px;
+  gap: 8px;
+}
+.card-stage .card-tags span {
+  font-size: 12px;
+  padding: 4px 7px;
+}
+.card-stage .card-footer {
+  display: block;
+  min-height: 0;
+  margin-top: 20px;
+  padding-top: 18px;
+}
+.card-stage .card-share {
+  max-width: none;
+  gap: 8px;
+}
+.card-stage .card-share > span,
+.card-stage .card-share small {
+  font-size: 12px;
+  letter-spacing: 0;
+  color: #647363;
+}
+.card-stage .card-share p {
+  font-size: 16px;
+}
+.card-stage .card-qr {
+  margin-top: 18px;
+  gap: 14px;
+}
+.card-stage .card-qr img {
+  width: 94px;
+  height: 94px;
+  flex-shrink: 0;
+}
+.card-stage .card-qr span {
+  font-size: 12px;
+  writing-mode: horizontal-tb;
+  white-space: normal;
+  letter-spacing: 0;
+  color: #52655e;
+}
+.card-stage .card-baseline {
+  font-size: 12px;
+  letter-spacing: 0;
+  color: #647363;
+  margin-top: 18px;
+  padding-top: 12px;
+  gap: 10px;
+}
+.has-result .site-footer,
+.has-result .result-intro p,
+.has-result .ai-status {
+  font-size: 12px;
 }

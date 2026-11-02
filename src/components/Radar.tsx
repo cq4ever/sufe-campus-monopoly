@@ -11,7 +11,7 @@ export function Radar({ values }: { values: Scores }) {
   return (
     <svg
       className="radar"
-      viewBox="0 0 340 265"
+      viewBox="0 -12 340 289"
       role="img"
       aria-label={axes
         .map((d) => `${copy.radarLabels[d]} ${values[d]}`)
@@ -67,21 +67,21 @@ export function Radar({ values }: { values: Scores }) {
             />
             <text
               x={lx}
-              y={ly - 3}
+              y={ly - 5}
               textAnchor="middle"
               className="radar-label"
               fill="#52655e"
-              fontSize="12"
+              fontSize="17"
             >
               {copy.radarLabels[d]}
             </text>
             <text
               x={lx}
-              y={ly + 14}
+              y={ly + 16}
               textAnchor="middle"
               className="radar-number"
               fill="#9a6c50"
-              fontSize="11"
+              fontSize="17"
               fontWeight="700"
             >
               {values[d]}

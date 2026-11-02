@@ -108,10 +108,6 @@ export function App() {
             <small>{copy.entertainment}</small>
           </span>
         </a>
-        <span className="header-index">
-          {result ? "03" : progress.started ? "02" : "01"}
-          <span> / 03</span>
-        </span>
       </header>
       {storageError && (
         <p className="storage-notice" role="status">
